@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Acompanhamento de Resultados</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <main class="dashboard">
+
+        <header class="header">
+            <div>
+                <p class="subtitle">ACOMPANHAMENTO DE RESULTADOS</p>
+                <h1>Metas 2026</h1>
+            </div>
+
+            <div class="status">
+                <span class="status-dot"></span>
+                <span id="statusText">Conectando...</span>
+            </div>
+        </header>
+
+
+        <!-- TOTAL REALIZADO -->
+
+        <section class="total-section">
+
+            <div class="total-label">
+                REALIZADO ATÉ AGORA
+            </div>
+
+            <div id="totalRealizado" class="total-value">
+                R$ 0,00
+            </div>
+
+            <div class="update-info">
+                Última atualização:
+                <span id="ultimaAtualizacao">--:--:--</span>
+            </div>
+
+        </section>
+
+
+        <!-- CARDS -->
+
+        <section id="metas" class="cards">
+
+            <div class="loading">
+                Carregando resultados...
+            </div>
+
+        </section>
+
+
+        <footer>
+            <span>Dados atualizados automaticamente</span>
+            <span>•</span>
+            <span>Atualização a cada 60 segundos</span>
+        </footer>
+
+    </main>
+
+
+    <script src="script.js"></script>
+
+</body>
+</html>
