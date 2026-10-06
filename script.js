@@ -21,7 +21,7 @@ const metas = [
         numero: "01"
     },
     {
-        nome: "Priscilla",
+        nome: "Um dia em Santoini",
         meta: 40000000,
         numero: "02"
     },

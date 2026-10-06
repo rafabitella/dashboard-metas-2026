@@ -470,17 +470,30 @@ h1 {
 ===================================================== */
 
 footer {
+    width: 100%;
+    margin-top: 28px;
+    padding-top: 18px;
+    border-top: 1px solid #16283b;
+
     display: flex;
-
     justify-content: center;
+    align-items: center;
+    gap: 8px;
 
-    gap: 10px;
+    color: #687c92;
+    font-size: 11px;
+    line-height: 1;
+}
 
-    margin-top: 22px;
+.footer-separator {
+    color: #40556c;
+    font-weight: 600;
+}
 
-    color: #53677e;
-
-    font-size: 12px;
+footer strong {
+    color: #8fa4bb;
+    font-weight: 700;
+    letter-spacing: 0.3px;
 }
 
 
