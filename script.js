@@ -23,7 +23,8 @@ const metas = [
     {
         nome: "Um dia na Arena Corinthians",
         meta: 40000000,
-        numero: "02"
+        numero: "02",
+        desconto: 50000
     },
     {
         nome: "15º Salário",
@@ -87,6 +88,7 @@ function converterNumero(valor) {
         .replace(",", ".");
 
     return Number(texto) || 0;
+
 }
 
 
@@ -112,10 +114,14 @@ function converterCSV(texto) {
                 dentroAspas &&
                 texto[i + 1] === '"'
             ) {
+
                 campoAtual += '"';
                 i++;
+
             } else {
+
                 dentroAspas = !dentroAspas;
+
             }
 
         } else if (
@@ -135,7 +141,9 @@ function converterCSV(texto) {
                 caractere === "\r" &&
                 texto[i + 1] === "\n"
             ) {
+
                 i++;
+
             }
 
             linhaAtual.push(campoAtual);
@@ -152,6 +160,7 @@ function converterCSV(texto) {
             campoAtual += caractere;
 
         }
+
     }
 
     if (
@@ -165,6 +174,7 @@ function converterCSV(texto) {
     }
 
     return linhas;
+
 }
 
 
@@ -175,7 +185,11 @@ function converterCSV(texto) {
 async function carregarPlanilha() {
 
     const url =
-        `https://docs.google.com/spreadsheets/d/e/${SHEET_ID}/pub?gid=${GID}&single=true&output=csv&cache=${Date.now()}`;
+        `https://docs.google.com/spreadsheets/d/e/${SHEET_ID}/pub` +
+        `?gid=${GID}` +
+        `&single=true` +
+        `&output=csv` +
+        `&cache=${Date.now()}`;
 
     try {
 
@@ -328,6 +342,7 @@ async function carregarPlanilha() {
         `;
 
     }
+
 }
 
 
@@ -346,15 +361,34 @@ function renderizarCards(total) {
 
     metas.forEach((item) => {
 
+        // ==================================================
+        // DESCONTO INDIVIDUAL DA META
+        // ==================================================
+
+        const desconto =
+            item.desconto || 0;
+
+
+        const totalConsiderado =
+            Math.max(
+                total - desconto,
+                0
+            );
+
+
+        // ==================================================
+        // CÁLCULOS
+        // ==================================================
+
         const falta =
             Math.max(
-                item.meta - total,
+                item.meta - totalConsiderado,
                 0
             );
 
 
         const percentual =
-            (total / item.meta) * 100;
+            (totalConsiderado / item.meta) * 100;
 
 
         const percentualBarra =
@@ -367,6 +401,10 @@ function renderizarCards(total) {
         const necessidadeMes =
             falta / 3;
 
+
+        // ==================================================
+        // CRIAR CARD
+        // ==================================================
 
         const card =
             document.createElement("div");
@@ -458,6 +496,7 @@ function renderizarCards(total) {
         container.appendChild(card);
 
     });
+
 }
 
 
@@ -521,7 +560,16 @@ carregarPlanilha();
 // ATUALIZAÇÃO AUTOMÁTICA
 // ======================================================
 
-setInterval(
-    carregarPlanilha,
-    INTERVALO_ATUALIZACAO
-);
+function atualizarAutomaticamente() {
+
+    setTimeout(async () => {
+
+        await carregarPlanilha();
+
+        atualizarAutomaticamente();
+
+    }, INTERVALO_ATUALIZACAO);
+
+}
+
+atualizarAutomaticamente();
