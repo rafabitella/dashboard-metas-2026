@@ -21,7 +21,7 @@ const metas = [
         numero: "01"
     },
     {
-        nome: "Um dia em Santoini",
+        nome: "Um dia na Arena Corinthians",
         meta: 40000000,
         numero: "02"
     },
