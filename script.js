@@ -21,10 +21,10 @@ const metas = [
         numero: "01"
     },
     {
-        nome: "Arena Corinthians",
+        nome: "Costa Amalfitana",
         meta: 40000000,
         numero: "02",
-        desconto: 50000
+        desconto: 0
     },
     {
         nome: "15º Salário",
