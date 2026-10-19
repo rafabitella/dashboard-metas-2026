@@ -1,6 +1,7 @@
-// ======================================================
-// CONFIGURAÇÃO DA PLANILHA
-// ======================================================
+
+/* ======================================================
+   CONFIGURAÇÃO DA PLANILHA
+====================================================== */
 
 const SHEET_ID =
     "2PACX-1vTHVBDSqVbQG-QuWyvkOLbkuUH614g_5VQ7d1qJXnvyt1o1gsaZFqTnMJ4yUkM0Yg";
@@ -10,9 +11,9 @@ const GID = "1429344482";
 const INTERVALO_ATUALIZACAO = 60 * 1000;
 
 
-// ======================================================
-// METAS
-// ======================================================
+/* ======================================================
+   METAS
+====================================================== */
 
 const metas = [
     {
@@ -39,37 +40,31 @@ const metas = [
 ];
 
 
-// ======================================================
-// FORMATAÇÃO
-// ======================================================
+/* ======================================================
+   FORMATAÇÃO
+====================================================== */
 
 function formatarMoeda(valor) {
-
     return new Intl.NumberFormat("pt-BR", {
         style: "currency",
         currency: "BRL",
         minimumFractionDigits: 2
     }).format(valor);
-
 }
 
-
 function formatarPercentual(valor) {
-
     return new Intl.NumberFormat("pt-BR", {
         minimumFractionDigits: 1,
         maximumFractionDigits: 1
     }).format(valor) + "%";
-
 }
 
 
-// ======================================================
-// CONVERTER NÚMERO
-// ======================================================
+/* ======================================================
+   CONVERTER NÚMERO
+====================================================== */
 
 function converterNumero(valor) {
-
     if (typeof valor === "number") {
         return valor;
     }
@@ -88,62 +83,47 @@ function converterNumero(valor) {
         .replace(",", ".");
 
     return Number(texto) || 0;
-
 }
 
 
-// ======================================================
-// CONVERTER CSV
-// ======================================================
+/* ======================================================
+   CONVERTER CSV
+====================================================== */
 
 function converterCSV(texto) {
-
     const linhas = [];
-
     let linhaAtual = [];
     let campoAtual = "";
     let dentroAspas = false;
 
     for (let i = 0; i < texto.length; i++) {
-
         const caractere = texto[i];
 
         if (caractere === '"') {
-
             if (
                 dentroAspas &&
                 texto[i + 1] === '"'
             ) {
-
                 campoAtual += '"';
                 i++;
-
             } else {
-
                 dentroAspas = !dentroAspas;
-
             }
-
         } else if (
             caractere === "," &&
             !dentroAspas
         ) {
-
             linhaAtual.push(campoAtual);
             campoAtual = "";
-
         } else if (
             (caractere === "\n" || caractere === "\r") &&
             !dentroAspas
         ) {
-
             if (
                 caractere === "\r" &&
                 texto[i + 1] === "\n"
             ) {
-
                 i++;
-
             }
 
             linhaAtual.push(campoAtual);
@@ -154,36 +134,28 @@ function converterCSV(texto) {
 
             linhaAtual = [];
             campoAtual = "";
-
         } else {
-
             campoAtual += caractere;
-
         }
-
     }
 
     if (
         campoAtual.length > 0 ||
         linhaAtual.length > 0
     ) {
-
         linhaAtual.push(campoAtual);
         linhas.push(linhaAtual);
-
     }
 
     return linhas;
-
 }
 
 
-// ======================================================
-// BUSCAR PLANILHA
-// ======================================================
+/* ======================================================
+   BUSCAR PLANILHA
+====================================================== */
 
 async function carregarPlanilha() {
-
     const url =
         `https://docs.google.com/spreadsheets/d/e/${SHEET_ID}/pub` +
         `?gid=${GID}` +
@@ -192,136 +164,67 @@ async function carregarPlanilha() {
         `&cache=${Date.now()}`;
 
     try {
-
-        atualizarStatus(
-            "Atualizando...",
-            "amarelo"
-        );
-
+        atualizarStatus("Atualizando...", "amarelo");
 
         const resposta = await fetch(url, {
             cache: "no-store"
         });
 
-
         if (!resposta.ok) {
-
-            throw new Error(
-                `Erro HTTP ${resposta.status}`
-            );
-
+            throw new Error(`Erro HTTP ${resposta.status}`);
         }
 
-
         const texto = await resposta.text();
+        const dados = converterCSV(texto);
 
+        console.log("CSV recebido:", texto);
+        console.log("Dados convertidos:", dados);
 
-        console.log(
-            "CSV recebido:",
-            texto
-        );
-
-
-        const dados =
-            converterCSV(texto);
-
-
-        console.log(
-            "Dados convertidos:",
-            dados
-        );
-
-
-        // ==================================================
-        // B6 = TOTAL REALIZADO
-        // ==================================================
+        /* B6 = TOTAL REALIZADO */
 
         const totalRealizado =
-            converterNumero(
-                dados[5]?.[1]
-            );
-
+            converterNumero(dados[5]?.[1]);
 
         console.log(
             "Total encontrado em B6:",
             totalRealizado
         );
 
-
         if (!totalRealizado) {
-
             throw new Error(
                 "Não consegui encontrar o valor da célula B6."
             );
-
         }
 
-
-        // ==================================================
-        // MOSTRAR TOTAL
-        // ==================================================
+        /* MOSTRAR TOTAL */
 
         document.getElementById(
             "totalRealizado"
-        ).textContent =
-            formatarMoeda(totalRealizado);
+        ).textContent = formatarMoeda(totalRealizado);
 
+        /* MOSTRAR CARDS */
 
-        // ==================================================
-        // MOSTRAR CARDS
-        // ==================================================
+        renderizarCards(totalRealizado);
 
-        renderizarCards(
-            totalRealizado
-        );
+        /* HORÁRIO */
 
-
-        // ==================================================
-        // HORÁRIO
-        // ==================================================
-
-        const agora =
-            new Date();
-
+        const agora = new Date();
 
         document.getElementById(
             "ultimaAtualizacao"
-        ).textContent =
-            agora.toLocaleTimeString(
-                "pt-BR"
-            );
+        ).textContent = agora.toLocaleTimeString("pt-BR");
 
+        /* STATUS */
 
-        // ==================================================
-        // STATUS
-        // ==================================================
-
-        atualizarStatus(
-            "Dados atualizados",
-            "verde"
-        );
-
+        atualizarStatus("Dados atualizados", "verde");
 
     } catch (erro) {
+        console.error("Erro ao carregar planilha:", erro);
 
-        console.error(
-            "Erro ao carregar planilha:",
-            erro
-        );
+        atualizarStatus("Erro na conexão", "vermelho");
 
-
-        atualizarStatus(
-            "Erro na conexão",
-            "vermelho"
-        );
-
-
-        document.getElementById(
-            "metas"
-        ).innerHTML = `
-
+        document.getElementById("metas").innerHTML = `
             <div class="error">
-
                 <strong>
                     Não foi possível carregar os dados.
                 </strong>
@@ -336,85 +239,68 @@ async function carregarPlanilha() {
                     Verifique o Console do navegador
                     para mais detalhes.
                 </small>
-
             </div>
-
         `;
-
     }
-
 }
 
 
-// ======================================================
-// RENDERIZAR CARDS
-// ======================================================
+/* ======================================================
+   RENDERIZAR CARDS
+====================================================== */
 
 function renderizarCards(total) {
-
-    const container =
-        document.getElementById("metas");
-
+    const container = document.getElementById("metas");
 
     container.innerHTML = "";
 
-
     metas.forEach((item) => {
+        /* DESCONTO INDIVIDUAL DA META */
 
-        // ==================================================
-        // DESCONTO INDIVIDUAL DA META
-        // ==================================================
+        const desconto = item.desconto || 0;
 
-        const desconto =
-            item.desconto || 0;
+        const totalConsiderado = Math.max(
+            total - desconto,
+            0
+        );
 
+        /* CÁLCULOS */
 
-        const totalConsiderado =
-            Math.max(
-                total - desconto,
-                0
-            );
-
-
-        // ==================================================
-        // CÁLCULOS
-        // ==================================================
-
-        const falta =
-            Math.max(
-                item.meta - totalConsiderado,
-                0
-            );
-
+        const falta = Math.max(
+            item.meta - totalConsiderado,
+            0
+        );
 
         const percentual =
             (totalConsiderado / item.meta) * 100;
 
+        const percentualBarra = Math.min(
+            Math.max(percentual, 0),
+            100
+        );
 
-        const percentualBarra =
-            Math.min(
-                percentual,
-                100
+        const necessidadeMes = falta / 3;
+
+        /* IDENTIFICAR META ATINGIDA */
+
+        const metaAtingida = percentual >= 100;
+        const metaSuperada = percentual > 100;
+
+        /* CRIAR CARD */
+
+        const card = document.createElement("div");
+
+        card.className = metaAtingida
+            ? "card card-complete"
+            : "card";
+
+        if (metaAtingida) {
+            card.setAttribute("aria-label",
+                `Meta ${item.nome} atingida${metaSuperada ? " e superada" : ""}`
             );
-
-
-        const necessidadeMes =
-            falta / 3;
-
-
-        // ==================================================
-        // CRIAR CARD
-        // ==================================================
-
-        const card =
-            document.createElement("div");
-
-
-        card.className = "card";
-
+        }
 
         card.innerHTML = `
-
             <div class="card-header">
 
                 <div class="card-title">
@@ -427,21 +313,22 @@ function renderizarCards(total) {
 
             </div>
 
-
             <div class="meta-label">
                 Meta
             </div>
-
 
             <div class="meta-value">
                 ${formatarMoeda(item.meta)}
             </div>
 
-
             <div class="progress-info">
 
                 <span class="progress-label">
-                    Progresso
+                    ${metaSuperada
+                        ? "✓ META SUPERADA"
+                        : metaAtingida
+                            ? "✓ META BATIDA"
+                            : "Progresso"}
                 </span>
 
                 <span class="progress-percent">
@@ -449,7 +336,6 @@ function renderizarCards(total) {
                 </span>
 
             </div>
-
 
             <div class="progress-bar">
 
@@ -459,7 +345,6 @@ function renderizarCards(total) {
                 ></div>
 
             </div>
-
 
             <div class="card-info">
 
@@ -475,7 +360,6 @@ function renderizarCards(total) {
 
                 </div>
 
-
                 <div class="info-box">
 
                     <div class="info-label">
@@ -489,87 +373,52 @@ function renderizarCards(total) {
                 </div>
 
             </div>
-
         `;
 
-
         container.appendChild(card);
-
     });
-
 }
 
 
-// ======================================================
-// STATUS
-// ======================================================
+/* ======================================================
+   STATUS DA CONEXÃO
+====================================================== */
 
-function atualizarStatus(
-    texto,
-    tipo
-) {
-
+function atualizarStatus(texto, tipo) {
     const statusText =
-        document.getElementById(
-            "statusText"
-        );
-
+        document.getElementById("statusText");
 
     const statusDot =
-        document.querySelector(
-            ".status-dot"
-        );
+        document.querySelector(".status-dot");
 
-
-    statusText.textContent =
-        texto;
-
+    statusText.textContent = texto;
 
     if (tipo === "verde") {
-
-        statusDot.style.background =
-            "#31c48d";
-
+        statusDot.style.background = "#31c48d";
+    } else if (tipo === "vermelho") {
+        statusDot.style.background = "#ef4444";
+    } else {
+        statusDot.style.background = "#f0b429";
     }
-
-    else if (tipo === "vermelho") {
-
-        statusDot.style.background =
-            "#ef4444";
-
-    }
-
-    else {
-
-        statusDot.style.background =
-            "#f0b429";
-
-    }
-
 }
 
 
-// ======================================================
-// INICIAR
-// ======================================================
+/* ======================================================
+   INICIAR
+====================================================== */
 
 carregarPlanilha();
 
 
-// ======================================================
-// ATUALIZAÇÃO AUTOMÁTICA
-// ======================================================
+/* ======================================================
+   ATUALIZAÇÃO AUTOMÁTICA
+====================================================== */
 
 function atualizarAutomaticamente() {
-
     setTimeout(async () => {
-
         await carregarPlanilha();
-
         atualizarAutomaticamente();
-
     }, INTERVALO_ATUALIZACAO);
-
 }
 
 atualizarAutomaticamente();

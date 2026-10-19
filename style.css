@@ -1,3 +1,8 @@
+
+/* =====================================================
+   CONFIGURAÇÃO GERAL
+===================================================== */
+
 * {
     margin: 0;
     padding: 0;
@@ -20,9 +25,7 @@ body {
 .dashboard {
     width: 100%;
     min-height: 100vh;
-
     padding: 40px 44px;
-
     display: flex;
     flex-direction: column;
 }
@@ -34,11 +37,9 @@ body {
 
 .header {
     width: 100%;
-
     display: flex;
     justify-content: space-between;
     align-items: center;
-
     margin-bottom: 32px;
 }
 
@@ -47,7 +48,6 @@ body {
     letter-spacing: 4px;
     font-weight: bold;
     color: #8194ab;
-
     margin-bottom: 8px;
 }
 
@@ -63,12 +63,9 @@ h1 {
     display: flex;
     align-items: center;
     gap: 10px;
-
     padding: 12px 18px;
-
     border: 1px solid #1c3047;
     border-radius: 30px;
-
     color: #a9b8ca;
     font-size: 14px;
 }
@@ -76,114 +73,86 @@ h1 {
 .status-dot {
     width: 10px;
     height: 10px;
-
     flex-shrink: 0;
-
     border-radius: 50%;
-
     background: #f0b429;
 }
 
 
 /* =====================================================
-   TOTAL
+   TOTAL REALIZADO
 ===================================================== */
 
 .total-section {
     width: 100%;
-
-    background: linear-gradient(
-        135deg,
-        #0e2035,
-        #0a1727
-    );
-
+    background: linear-gradient(135deg, #0e2035, #0a1727);
     border: 1px solid #1c3047;
-
     border-radius: 22px;
-
     padding: 28px 34px;
-
     margin-bottom: 28px;
-
-    box-shadow:
-        0 15px 40px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
 }
 
 .total-label {
     color: #8194ab;
-
     font-size: 14px;
-
     font-weight: bold;
-
     letter-spacing: 2px;
 }
 
 .total-value {
     font-size: clamp(44px, 5vw, 72px);
-
     font-weight: 800;
-
     margin-top: 8px;
-
     letter-spacing: -2px;
-
     white-space: nowrap;
 }
 
 .update-info {
     margin-top: 8px;
-
     color: #6e8198;
-
     font-size: 13px;
 }
 
 
 /* =====================================================
-   CARDS
+   GRADE DE CARTÕES
 ===================================================== */
 
 .cards {
     width: 100%;
-
     display: grid;
-
-    grid-template-columns:
-        repeat(4, minmax(0, 1fr));
-
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 20px;
-
     flex: 1;
-
     min-width: 0;
 }
 
+
+/* =====================================================
+   CARTÃO PADRÃO — META EM ANDAMENTO
+===================================================== */
+
 .card {
+    position: relative;
     min-width: 0;
-
     width: 100%;
-
     background: #0c1a2b;
-
     border: 1px solid #1c3047;
-
     border-radius: 20px;
-
     padding: 24px;
-
     display: flex;
     flex-direction: column;
-
     min-height: 280px;
-
     overflow: hidden;
 
-    box-shadow:
-        0 12px 30px rgba(0, 0, 0, 0.20);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.20);
 
-    transition: transform 0.2s ease;
+    transition:
+        background 0.4s ease,
+        border-color 0.4s ease,
+        box-shadow 0.4s ease,
+        transform 0.25s ease;
 }
 
 .card:hover {
@@ -192,22 +161,116 @@ h1 {
 
 
 /* =====================================================
-   CARD HEADER
+   DESTAQUE ESPECIAL — META ATINGIDA
 ===================================================== */
 
+.card.card-complete {
+    background: linear-gradient(
+        145deg,
+        #104438 0%,
+        #0b302d 48%,
+        #092421 100%
+    );
+
+    border: 1px solid #39f5b0;
+
+    box-shadow:
+        0 0 0 1px rgba(57, 245, 176, 0.13),
+        0 0 22px rgba(57, 245, 176, 0.22),
+        0 12px 35px rgba(0, 0, 0, 0.30);
+
+    animation: conquistaEntrada 0.8s ease-out both;
+}
+
+/* Linha neon no topo */
+
+.card.card-complete::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 10%;
+    right: 10%;
+    height: 2px;
+
+    background: linear-gradient(
+        90deg,
+        transparent,
+        #39f5b0,
+        #c1ffe8,
+        #39f5b0,
+        transparent
+    );
+
+    box-shadow: 0 0 14px rgba(57, 245, 176, 0.85);
+    pointer-events: none;
+}
+
+/* Reflexo discreto no canto superior */
+
+.card.card-complete::after {
+    content: "";
+    position: absolute;
+    top: -65px;
+    right: -65px;
+    width: 145px;
+    height: 145px;
+    border-radius: 50%;
+
+    background: radial-gradient(
+        circle,
+        rgba(57, 245, 176, 0.13) 0%,
+        rgba(57, 245, 176, 0) 72%
+    );
+
+    pointer-events: none;
+}
+
+.card.card-complete:hover {
+    transform: translateY(-4px);
+    border-color: #8affd3;
+
+    box-shadow:
+        0 0 0 1px rgba(57, 245, 176, 0.22),
+        0 0 30px rgba(57, 245, 176, 0.30),
+        0 16px 38px rgba(0, 0, 0, 0.34);
+}
+
+/* Animação de entrada */
+
+@keyframes conquistaEntrada {
+    0% {
+        box-shadow:
+            0 0 0 rgba(57, 245, 176, 0);
+    }
+
+    55% {
+        box-shadow:
+            0 0 32px rgba(57, 245, 176, 0.35);
+    }
+
+    100% {
+        box-shadow:
+            0 0 0 1px rgba(57, 245, 176, 0.13),
+            0 0 22px rgba(57, 245, 176, 0.22),
+            0 12px 35px rgba(0, 0, 0, 0.30);
+    }
+}
+
+
 /* =====================================================
-   CARD HEADER
+   CABEÇALHO DOS CARTÕES
 ===================================================== */
 
 .card-header {
-    width: 100%;
+    position: relative;
+    z-index: 1;
 
+    width: 100%;
     height: 36px;
 
     display: flex;
     justify-content: space-between;
     align-items: center;
-
     gap: 12px;
 
     margin-bottom: 24px;
@@ -215,20 +278,15 @@ h1 {
 
 .card-title {
     min-width: 0;
-
     font-size: 20px;
-
     font-weight: bold;
-
     line-height: 1;
-
     white-space: nowrap;
 }
 
 .card-number {
     width: 36px;
     height: 36px;
-
     min-width: 36px;
 
     display: flex;
@@ -236,73 +294,84 @@ h1 {
     justify-content: center;
 
     border-radius: 50%;
-
     background: #132940;
-
     color: #8fa4bb;
-
     font-weight: bold;
+
+    transition:
+        background 0.4s ease,
+        color 0.4s ease,
+        box-shadow 0.4s ease;
 }
 
+/* Número verde quando a meta é atingida */
 
-/* =====================================================
-   META
-===================================================== */
+.card.card-complete .card-number {
+    background: linear-gradient(145deg, #66ffbf, #20d997);
+    color: #063023;
+
+    box-shadow:
+        0 0 0 3px rgba(57, 245, 176, 0.10),
+        0 0 18px rgba(57, 245, 176, 0.45);
+}
+
+.card.card-complete .card-title {
+    color: #ffffff;
+}
+
 
 /* =====================================================
    META
 ===================================================== */
 
 .meta-label {
+    position: relative;
+    z-index: 1;
+
     height: 14px;
-
     color: #72869d;
-
     font-size: 12px;
-
     text-transform: uppercase;
-
     letter-spacing: 1px;
-
     line-height: 14px;
-
     margin-bottom: 6px;
 }
 
 .meta-value {
+    position: relative;
+    z-index: 1;
+
     height: 31px;
-
     font-size: 25px;
-
     font-weight: bold;
-
     line-height: 31px;
-
     margin-bottom: 20px;
-
     white-space: nowrap;
 }
 
+.card.card-complete .meta-label {
+    color: #9bd9c3;
+}
 
-/* =====================================================
-   PROGRESSO
-===================================================== */
+.card.card-complete .meta-value {
+    color: #ffffff;
+}
+
 
 /* =====================================================
    PROGRESSO
 ===================================================== */
 
 .progress-info {
-    width: 100%;
+    position: relative;
+    z-index: 1;
 
+    width: 100%;
     height: 22px;
 
     display: flex;
-
     justify-content: space-between;
-
     align-items: center;
-
     gap: 10px;
 
     margin-bottom: 7px;
@@ -310,116 +379,144 @@ h1 {
 
 .progress-label {
     color: #8295aa;
-
     font-size: 12px;
-
     line-height: 22px;
 }
 
 .progress-percent {
     font-size: 18px;
-
     font-weight: bold;
-
     line-height: 22px;
-
     white-space: nowrap;
 }
 
+.card.card-complete .progress-label {
+    color: #76ffc9;
+    font-weight: bold;
+    letter-spacing: 0.2px;
+}
+
+.card.card-complete .progress-percent {
+    color: #8bffd4;
+    text-shadow: 0 0 12px rgba(57, 245, 176, 0.30);
+}
+
+
+/* =====================================================
+   BARRA DE PROGRESSO
+===================================================== */
+
 .progress-bar {
+    position: relative;
+    z-index: 1;
+
     width: 100%;
-
     height: 10px;
-
     flex-shrink: 0;
 
     background: #172b42;
-
     border-radius: 20px;
-
     overflow: hidden;
-
     margin-bottom: 25px;
 }
 
 .progress-fill {
     height: 100%;
-
     width: 0%;
 
     background: #31c48d;
-
     border-radius: 20px;
 
-    transition: width 1s ease;
+    transition:
+        width 1s ease,
+        background 0.4s ease,
+        box-shadow 0.4s ease;
+}
+
+.card.card-complete .progress-bar {
+    background: #174f40;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.30);
+}
+
+.card.card-complete .progress-fill {
+    background: linear-gradient(
+        90deg,
+        #0fc98b,
+        #39f5b0,
+        #c1ffe8
+    );
+
+    box-shadow:
+        0 0 10px rgba(57, 245, 176, 0.75),
+        0 0 20px rgba(57, 245, 176, 0.35);
 }
 
 
 /* =====================================================
-   INFORMAÇÕES
-===================================================== */
-
-/* =====================================================
-   INFORMAÇÕES
+   INFORMAÇÕES INFERIORES
 ===================================================== */
 
 .card-info {
-    width: 100%;
+    position: relative;
+    z-index: 1;
 
+    width: 100%;
     margin-top: auto;
 
     display: grid;
-
     grid-template-columns: repeat(2, minmax(0, 1fr));
-
     gap: 10px;
-
     align-items: stretch;
 }
 
 .info-box {
     min-width: 0;
-
     height: 68px;
 
     background: #091625;
-
+    border: 1px solid transparent;
     border-radius: 12px;
-
     padding: 11px 12px;
 
     display: flex;
     flex-direction: column;
-
     justify-content: center;
 
     overflow: hidden;
+
+    transition:
+        background 0.4s ease,
+        border-color 0.4s ease;
 }
 
 .info-label {
     color: #687c92;
-
     font-size: 10px;
-
     font-weight: 500;
-
     margin-bottom: 6px;
-
     text-transform: uppercase;
-
     line-height: 1;
 }
 
 .info-value {
     font-size: 14px;
-
     font-weight: 700;
-
     line-height: 1;
-
     white-space: nowrap;
-
     letter-spacing: -0.2px;
+}
+
+.card.card-complete .info-box {
+    background: rgba(3, 25, 23, 0.68);
+    border-color: rgba(91, 255, 194, 0.15);
+}
+
+.card.card-complete .info-label {
+    color: #9bd9c3;
+}
+
+.card.card-complete .info-value {
+    color: #e3fff4;
 }
 
 
@@ -431,15 +528,11 @@ h1 {
     grid-column: 1 / -1;
 
     display: flex;
-
     align-items: center;
-
     justify-content: center;
 
     min-height: 250px;
-
     color: #8194ab;
-
     font-size: 18px;
 }
 
@@ -452,21 +545,17 @@ h1 {
     grid-column: 1 / -1;
 
     background: #29151a;
-
     border: 1px solid #63313b;
-
     border-radius: 15px;
-
     padding: 25px;
 
     color: #ff9caa;
-
     text-align: center;
 }
 
 
 /* =====================================================
-   FOOTER
+   RODAPÉ
 ===================================================== */
 
 footer {
@@ -502,30 +591,23 @@ footer strong {
 ===================================================== */
 
 @media (max-width: 1100px) {
-
     .dashboard {
         padding: 30px;
     }
 
     .cards {
-        grid-template-columns:
-            repeat(2, minmax(0, 1fr));
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
-
 }
 
-
 @media (max-width: 700px) {
-
     .dashboard {
         padding: 20px;
     }
 
     .header {
         flex-direction: column;
-
         align-items: flex-start;
-
         gap: 20px;
     }
 
@@ -540,5 +622,17 @@ footer strong {
     .total-value {
         font-size: 42px;
     }
+}
 
+/* Respeitar a preferência do usuário por menos animação */
+
+@media (prefers-reduced-motion: reduce) {
+    .card,
+    .card-complete,
+    .progress-fill,
+    .card-number,
+    .info-box {
+        animation: none !important;
+        transition: none !important;
+    }
 }
