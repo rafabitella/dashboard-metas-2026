@@ -18,11 +18,11 @@ const INTERVALO_ATUALIZACAO = 60 * 1000;
 const metas = [
     {
         nome: "14º Salário",
-        meta: 36000000,
+        meta: 36110000,
         numero: "01"
     },
     {
-        nome: "Costa Amalfitana",
+        nome: "Final da Libertadores",
         meta: 40000000,
         numero: "02",
         desconto: 0
