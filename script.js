@@ -149,7 +149,29 @@ function converterCSV(texto) {
 
     return linhas;
 }
+// HINO DO PALMEIRAS — META FINAL DA LIBERTADORES
+const audioHinoPalmeiras = new Audio("./palmeiras.mp3");
+audioHinoPalmeiras.volume = 1;
 
+function verificarHinoPalmeiras(total) {
+    const chave = "hino_palmeiras_final_libertadores";
+
+    if (
+        total >= 40000000 &&
+        localStorage.getItem(chave) !== "sim"
+    ) {
+        audioHinoPalmeiras.play()
+            .then(() => {
+                localStorage.setItem(chave, "sim");
+            })
+            .catch((erro) => {
+                console.warn(
+                    "O navegador bloqueou o hino ou não encontrou o áudio:",
+                    erro
+                );
+            });
+    }
+}
 
 /* ======================================================
    BUSCAR PLANILHA
@@ -184,6 +206,7 @@ async function carregarPlanilha() {
 
         const totalRealizado =
             converterNumero(dados[5]?.[1]);
+            verificarHinoPalmeiras(totalRealizado);
 
         console.log(
             "Total encontrado em B6:",
